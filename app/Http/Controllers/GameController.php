@@ -20,7 +20,7 @@ class GameController extends Controller
 
         $randomNumber = $this->generateRandomNumber();
         session(['randomNumber' => $randomNumber['number']]);
-//dd($randomNumber['number']);
+
         return view('home');
     }
 
@@ -48,9 +48,6 @@ class GameController extends Controller
         $playerGuess = $request->input('guess');
         $randomNumber = session('randomNumber');
 
-       //\\ dd($randomNumber);
-
-        // Check the limitations
         if (!$this->checkDigitLimitations($playerGuess)) {
             Session::flash('alert-class', 'alert-danger');
             return redirect()->route('start')->withInput()->withErrors(['guess' => 'Invalid guess!']);
@@ -77,7 +74,6 @@ class GameController extends Controller
         return view('result')->with(['results' => $results]);
     }
 
-// Helper method to check the digit limitations
     private function checkDigitLimitations($guess)
     {
         // Check if digits 1 and 8 are right next to each other
@@ -98,8 +94,6 @@ class GameController extends Controller
         return true;
     }
 
-
-    // Helper method to calculate the number of bulls
     private function calculateBulls($guess, $target)
     {
         $bulls = 0;
@@ -111,7 +105,6 @@ class GameController extends Controller
         return $bulls;
     }
 
-    // Helper method to calculate the number of cows
     private function calculateCows($guess, $target)
     {
         $cows = 0;
@@ -125,25 +118,9 @@ class GameController extends Controller
 
     public function result()
     {
-        // Render the result view without any data
         return view('result');
     }
 
-//    public function gameover()
-//    {
-//        $startTime = session('startTime');
-//        $endTime = now();
-//        $elapsedTime = $startTime->diffInSeconds($endTime);
-//
-//        $game = Game::where('user_id', auth()->user()->id)->latest()->first();
-//        $game->time = $elapsedTime;
-//        $game->save();
-//
-//
-//        // Clear the session variables
-//        session()->forget(['randomNumber', 'startTime']);
-//        return view('gameover')->with(['elapsedTime' => $elapsedTime]);
-//    }
     public function gameover()
     {
         $startTime = session('startTime');
