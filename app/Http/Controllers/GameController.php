@@ -30,19 +30,37 @@ class GameController extends Controller
             session(['startTime' => now()]);
         }
     }
+
     private function generateRandomNumber()
     {
-        $str = '0123456789';
         $number = '';
         $arr = array_fill(0, 10, 0);
+        $usedDigits = array();
+
         for ($i = 1; $i <= 4; $i++) {
-            $rand = rand(0, strlen($str)-1);
-            $number .= $str[$rand];
-            $arr[$str[$rand]] = $i;
-            $str = str_replace($str[$rand], '', $str);
+            $availableDigits = array_diff(range(0, 9), $usedDigits);
+
+            // Ensure digits 1 and 8 are right next to each other
+            if (($i == 2 && in_array(1, $usedDigits) && !in_array(8, $usedDigits))
+                || ($i == 3 && !in_array(1, $usedDigits) && in_array(8, $usedDigits))) {
+                $availableDigits = array_intersect($availableDigits, [1, 8]);
+            }
+
+            // Ensure digits 4 and 5 are not on even index/position
+            if (($i == 2 || $i == 4) && in_array(4, $usedDigits) && in_array(5, $usedDigits)) {
+                $availableDigits = array_diff($availableDigits, [4, 5]);
+            }
+
+            $randIndex = array_rand($availableDigits);
+            $digit = $availableDigits[$randIndex];
+
+            $number .= $digit;
+            $usedDigits[] = $digit;
         }
+
         return ['number' => $number];
     }
+
     public function guess(Request $request)
     {
         $playerGuess = $request->input('guess');
