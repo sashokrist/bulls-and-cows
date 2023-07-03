@@ -4,17 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Game;
 use App\Models\Result;
+use App\Rules\CustomValidationRules;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
 class GameController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function start()
     {
-        $newGame = new Game();
-        $newGame->user_id = auth()->user()->id;
-        $newGame->time = now();
-        $newGame->save();
+        Game::create([
+            'user_id' => auth()->id(),
+            'time' => now(),
+        ]);
 
         $this->startGame();
 
@@ -63,13 +68,20 @@ class GameController extends Controller
 
     public function guess(Request $request)
     {
+        $request->validate([
+            'guess' => [
+                'required',
+                'digits:4'
+            ],
+        ]);
+
         $playerGuess = $request->input('guess');
         $randomNumber = session('randomNumber');
 
-        if (!$this->checkDigitLimitations($playerGuess)) {
-            Session::flash('alert-class', 'alert-danger');
-            return redirect()->route('start')->withInput()->withErrors(['guess' => 'Invalid guess!']);
-        }
+//        if (!$this->checkDigitLimitations($playerGuess)) {
+//            Session::flash('alert-class', 'alert-danger');
+//            return redirect()->route('start')->withInput()->withErrors(['guess' => 'Invalid input, try again!']);
+//        }
 
         $bulls = $this->calculateBulls($playerGuess, $randomNumber);
         $cows = $this->calculateCows($playerGuess, $randomNumber);
@@ -92,25 +104,25 @@ class GameController extends Controller
         return view('result')->with(['results' => $results]);
     }
 
-    private function checkDigitLimitations($guess)
-    {
-        // Check if digits 1 and 8 are right next to each other
-        if (str_contains($guess, '18') || str_contains($guess, '81')) {
-            return true;
-        }
-
-        // Check if digits 4 and 5 are on even index/position
-        for ($i = 0; $i < strlen($guess); $i += 2) {
-            if ($guess[$i] === '4' && isset($guess[$i + 1]) && $guess[$i + 1] === '5') {
-                return false;
-            }
-            if ($guess[$i] === '5' && isset($guess[$i + 1]) && $guess[$i + 1] === '4') {
-                return false;
-            }
-        }
-
-        return true;
-    }
+//    private function checkDigitLimitations($guess)
+//    {
+//        // Check if digits 1 and 8 are right next to each other
+//        if (str_contains($guess, '18') || str_contains($guess, '81')) {
+//            return true;
+//        }
+//
+//        // Check if digits 4 and 5 are on even index/position
+//        for ($i = 0; $i < strlen($guess); $i += 2) {
+//            if ($guess[$i] === '4' && isset($guess[$i + 1]) && $guess[$i + 1] === '5') {
+//                return false;
+//            }
+//            if ($guess[$i] === '5' && isset($guess[$i + 1]) && $guess[$i + 1] === '4') {
+//                return false;
+//            }
+//        }
+//
+//        return true;
+//    }
 
     private function calculateBulls($guess, $target)
     {
@@ -132,11 +144,6 @@ class GameController extends Controller
             }
         }
         return $cows;
-    }
-
-    public function result()
-    {
-        return view('result');
     }
 
     public function gameover()

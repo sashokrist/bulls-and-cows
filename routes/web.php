@@ -39,6 +39,5 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 // Start screen route
 Route::get('/start', [GameController:: class, 'start'])->name('start');
 Route::post('/guess', [GameController:: class, 'guess'])->name('guess');
-Route::get('/result', [GameController:: class, 'result'])->name('result');
 Route::get('/gameover', [GameController:: class, 'gameOver'])->name('gameover');
 

@@ -9,6 +9,11 @@ class Result extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'game_id',
+        'guess'
+    ];
+
     public function game()
     {
         return $this->belongsTo(Game::class);
