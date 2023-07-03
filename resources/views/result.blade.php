@@ -11,10 +11,10 @@
 
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">Welcome {{ auth()->user()->name }}</div>
+                    <div class="card-header"><h1 class="text-center">Welcome {{ auth()->user()->name }}</h1></div>
 
                     <div class="card-body">
-                        <div>
+                        <div class="text-center">
                             <form action="{{ route('guess') }}" method="POST">
                                 @csrf
                                 <label for="guess">Enter your guess:</label>

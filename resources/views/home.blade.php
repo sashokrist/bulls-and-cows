@@ -13,12 +13,12 @@
                 @endif
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-body">
-                        <h1>Welcome to Bulls and Cows Game!</h1>
+                    <div class="card-header"><h1 class="text-center">Welcome {{ auth()->user()->name }}</h1></div>
+                    <div class="card-body text-center">
                         <form action="{{ route('guess') }}" method="POST">
                             @csrf
                             <label for="guess">Enter your guess:</label>
-                            <input type="text" id="guess" name="guess">
+                            <input type="text" id="guess" name="guess" required>
                             <button class="btn btn-primary" type="submit">Guess</button>
                         </form>
                     </div>

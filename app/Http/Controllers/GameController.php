@@ -78,6 +78,8 @@ class GameController extends Controller
         $playerGuess = $request->input('guess');
         $randomNumber = session('randomNumber');
 
+       // dd($randomNumber);
+
 //        if (!$this->checkDigitLimitations($playerGuess)) {
 //            Session::flash('alert-class', 'alert-danger');
 //            return redirect()->route('start')->withInput()->withErrors(['guess' => 'Invalid input, try again!']);
@@ -99,7 +101,7 @@ class GameController extends Controller
         $result->cows = $cows;
         $result->save();
 
-        $results = Result::where('game_id', $game->id)->get();
+        $results = Result::where('game_id', $game->id)->orderByDesc('id')->get();
 
         return view('result')->with(['results' => $results]);
     }
