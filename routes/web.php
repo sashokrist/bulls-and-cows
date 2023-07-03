@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\GameController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ResultController;
 use App\Models\Game;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -16,25 +18,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    $results = Game::orderBy('time')->take(10)->with('user')->get(['user_id', 'time']);
-    $users = User::whereIn('id', $results->pluck('user_id'))->get(['id', 'name']);
-
-    $formattedResults = $results->map(function ($result) use ($users) {
-        $user = $users->where('id', $result->user_id)->first();
-        return [
-            'user_id' => $result->user_id,
-            'username' => $user->name,
-            'time' => $result->time,
-        ];
-    });
-
-    return view('main', compact('formattedResults'));
-});
+Route::get('/', [ResultController::class, 'index'])->name('home');
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 // Start screen route
 Route::get('/start', [GameController:: class, 'start'])->name('start');

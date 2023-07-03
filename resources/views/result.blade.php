@@ -3,11 +3,11 @@
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
-                @if (Session::has('errors'))
-                    <div class="alert alert-danger">
-                        {{ Session::get('success') }}
-                    </div>
-                @endif
+            @if (Session::has('errors'))
+                <div class="alert alert-danger">
+                    {{ Session::get('success') }}
+                </div>
+            @endif
 
             <div class="col-md-8">
                 <div class="card">

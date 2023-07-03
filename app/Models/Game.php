@@ -16,11 +16,11 @@ class Game extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function result()
     {
-        return $this->hasMany(Result::class);
+        return $this->hasMany(Result::class, 'game_id');
     }
 }

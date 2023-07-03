@@ -6,11 +6,11 @@
             @if(Session::has('message'))
                 <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ Session::get('message') }}</p>
             @endif
-                @if ($errors->has('guess'))
-                    <div class="alert alert-danger">
-                        {{ $errors->first('guess') }}
-                    </div>
-                @endif
+            @if ($errors->has('guess'))
+                <div class="alert alert-danger">
+                    {{ $errors->first('guess') }}
+                </div>
+            @endif
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header"><h1 class="text-center">Welcome {{ auth()->user()->name }}</h1></div>
